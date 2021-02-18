@@ -1,6 +1,7 @@
 package ows.boostcourse.roomexample;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.room.Room;
 
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,14 +31,17 @@ public class MainActivity extends AppCompatActivity {
                 .allowMainThreadQueries()
                 .build();
 
-        mDbTextView.setText(db.studentDao().getAll().toString());
+        // UI 갱신 (LiveData)
+        db.studentDao().getAll().observe(this, students -> {
+            mDbTextView.setText(students.toString());
+        });
 
         Button insertButton = findViewById(R.id.insert_btn);
         insertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 버튼 클릭시 DB에 insert
                 db.studentDao().insert(new Student(mNameEditText.getText().toString(),mUniversityEditText.getText().toString()));
-                mDbTextView.setText(db.studentDao().getAll().toString());
             }
         });
 
