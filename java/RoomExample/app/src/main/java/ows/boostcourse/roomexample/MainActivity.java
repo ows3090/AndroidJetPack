@@ -2,6 +2,7 @@ package ows.boostcourse.roomexample;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import android.os.Bundle;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText mNameEditText;
     private EditText mUniversityEditText;
     private TextView mDbTextView;
+    MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +29,10 @@ public class MainActivity extends AppCompatActivity {
         mUniversityEditText = findViewById(R.id.university_edit);
         mDbTextView = findViewById(R.id.db_text);
 
-        AppDatabase db = Room.databaseBuilder(this,AppDatabase.class,"StudentInfo")
-                .allowMainThreadQueries()
-                .build();
+        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(MainViewModel.class);
 
         // UI 갱신 (LiveData)
-        db.studentDao().getAll().observe(this, students -> {
+        viewModel.getAll().observe(this, students -> {
             mDbTextView.setText(students.toString());
         });
 
@@ -41,19 +41,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 버튼 클릭시 DB에 insert
-                db.studentDao().insert(new Student(mNameEditText.getText().toString(),mUniversityEditText.getText().toString()));
+                viewModel.insertInfo(new Student(mNameEditText.getText().toString(),mUniversityEditText.getText().toString()));
             }
         });
-
-        Button updateButton = findViewById(R.id.update_btn);
-        updateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.studentDao().update(new Student(mNameEditText.getText().toString(),mUniversityEditText.getText().toString()));
-                mDbTextView.setText(db.studentDao().getAll().toString());
-            }
-        });
-
-
     }
 }
