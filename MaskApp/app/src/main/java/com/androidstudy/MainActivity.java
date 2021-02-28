@@ -39,12 +39,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();

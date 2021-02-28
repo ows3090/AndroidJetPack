@@ -17,27 +17,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 
+@HiltViewModel
 public class MainViewModel extends ViewModel {
     private static final String TAG = MainViewModel.class.getSimpleName();
 
     public MutableLiveData<List<Store>> itemLiveData = new MutableLiveData<>();
     public MutableLiveData<Boolean> loadingLiveData = new MutableLiveData<>();
-
     public Location location;
 
-    private Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(MaskService.BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build();
-
-    private MaskService service = retrofit.create(MaskService.class);
-
+    @Inject
+    MaskService service;
 
     public void fetchStoreInfo() {
         loadingLiveData.setValue(true);
