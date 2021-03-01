@@ -20,7 +20,6 @@ public class NetworkModule {
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build();
 
-        MaskService maskService = retrofit.create(MaskService.class);
-        return maskService;
+        return retrofit.create(MaskService.class);
     }
 }
